@@ -53,7 +53,6 @@ function Verification(props: any) {
                             return (
                                 <Grid item xs key={index} >
                                     <TextField 
-                                    autoFocus={true} 
                                     name='otp' 
                                     variant="outlined"
                                     value={data}
