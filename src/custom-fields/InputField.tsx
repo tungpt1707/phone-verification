@@ -18,8 +18,14 @@ function InputField(props: any) {
     const { errors, touched } = form
     
     const showErrors = errors[name] && touched[name]    
+    console.log(showErrors);    
     
-    const helperText = errors[name]
+    let helperText = ''
+    if(showErrors)
+    {
+        helperText= errors[name]
+    }    
+    
     
     
     return (
