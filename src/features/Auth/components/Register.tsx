@@ -11,17 +11,13 @@ import firebase from '../../../firebase';
 import Verification from './Verification'
 import * as Yup from 'yup'
 import {
-    Formik,
-    FormikHelpers,
-    FormikProps,
-    Form,
-    Field,
-    FieldProps,
+    Formik,    
+    Form,    
     FastField,
 } from 'formik';
 import InputField from '../../../custom-fields/InputField';
 import DropdownInputField from '../../../custom-fields/DropdownInputField';
-import { red } from '@material-ui/core/colors';
+
 
 interface MyFormValues {
     country: string;
@@ -70,15 +66,17 @@ function Register() {
     });
 
     const [isCodeShow, setIsCodeShow] = useState(false);
+    const [isPhoneNumberCorrect, setIsPhoneNumberCorrct] = useState(true);
 
-    const handleOtpValue = (value: string) => {       
-        if (value.length < 6) return        
-        let code = value;       
+    const handleOtpValue = (value: string) => {
+        if (value.length < 6) return
+        let code = value;
         (window as any).confirmationResult.confirm(code).then((result: any) => {
             // User signed in successfully.
             const user = result.user;
             console.log(user);
             setValidatetmsg("User signed in successfully.");
+
         }).catch((error: any) => {
             console.log(error.message);
             setValidatetmsg(error.message)
@@ -90,23 +88,31 @@ function Register() {
         <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
-            onSubmit={(values) => {                
+            onSubmit={(values) => {
                 const phonenumber = values.country + values.phoneNumber
-                setPhonenumber(phonenumber);              
+                setPhonenumber(phonenumber);
+                if ((window as any).recaptchaVerifier && (window as any).recaptchaWrapperRef) {
+                    // (window as any).recaptchaVerifier.clear()
+                    const verifier = (window as any).recaptchaVerifier;
+                    verifier.clear();
+                    (window as any).recaptchaWrapperRef.innerHTML = '<div id="recaptcha-container"></div>'
+                  }
+                (window as any).recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+                    'size': 'invisible',                    
+                });
 
-                const verifier = new firebase.auth.RecaptchaVerifier(
-                    "recaptcha-container",
-                    {
-                        'size': 'invisible',
-                    });
+
+                const verifier = (window as any).recaptchaVerifier;
                 firebase.auth().signInWithPhoneNumber(phonenumber, verifier).then((e) => {
                     (window as any).confirmationResult = e;
                     console.log("Sent OTP");
                     setIsCodeShow(true);
-                }).catch(function (error) {
-                    console.log("SMS not sent", error);
                     verifier.clear();
-                });;
+                }).catch(function (error) {
+                    console.log(error.message);
+                    setIsPhoneNumberCorrct(false);
+                })
+
             }}>
             {formikProps => {
                 //do something here
@@ -116,7 +122,9 @@ function Register() {
                 return (
                     <Container component="main" maxWidth="xs">
                         <CssBaseline />
-                        <div id='recaptcha-container'></div>
+                        <div ref={ref => (window as any).recaptchaWrapperRef = ref}>
+                            <div id="recaptcha-container"></div>
+                        </div>
                         {!isCodeShow &&
                             <div className={classes.paper}>
                                 <Typography component="h1" variant="h5">
@@ -136,6 +144,7 @@ function Register() {
                                         type="number"
                                         component={InputField}
                                     />
+                                    {!isPhoneNumberCorrect && <div>Phone number is not correct! please try again</div>}
                                     <Button
                                         fullWidth
                                         variant="contained"
@@ -162,8 +171,8 @@ function Register() {
                                 </Form>
                             </div>
                         }
-                        {isCodeShow && <Verification otpchild={handleOtpValue} phonenumber={phonenumber} validatemsg ={validatemsg}/>}
-                       
+                        {isCodeShow && <Verification otpchild={handleOtpValue} phonenumber={phonenumber} validatemsg={validatemsg} />}
+
                     </Container>
                 )
             }}

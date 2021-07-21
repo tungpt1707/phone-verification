@@ -1,7 +1,5 @@
-import React from 'react'
 import PropTypes from 'prop-types'
 import TextField from '@material-ui/core/TextField';
-import { ErrorMessage } from 'formik';
 
 
 InputField.propTypes = {
@@ -18,7 +16,6 @@ function InputField(props: any) {
     const { field, form, label, type } = props
     const { name, value, onChange, onBlur } = field
     const { errors, touched } = form
-    console.log({errors, touched });
     
     const showErrors = errors[name] && touched[name]
     const helperText = errors[name]
@@ -40,8 +37,6 @@ function InputField(props: any) {
                 error= {showErrors}
                 helperText={helperText}
             />
-
-            
         </div>
     )
 }

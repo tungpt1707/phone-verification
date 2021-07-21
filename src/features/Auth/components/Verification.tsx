@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { TextField, Grid, Link } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -34,7 +34,7 @@ function Verification(props: any) {
         let value = event.target.value;
         console.log(value, index);
 
-        setOtp([...otp.map((d, ind) => (ind == index) ? value : d)])
+        setOtp([...otp.map((d, ind) => (ind === index) ? value : d)])
     }
     props.otpchild(otp.join(''))
 
