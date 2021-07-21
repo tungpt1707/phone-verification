@@ -116,8 +116,8 @@ function Register() {
             }}>
             {formikProps => {
                 //do something here
-                const { values, errors, touched } = formikProps
-                console.log({ values, errors, touched });
+                // const { values, errors, touched } = formikProps
+                //console.log({ values, errors, touched });
 
                 return (
                     <Container component="main" maxWidth="xs">

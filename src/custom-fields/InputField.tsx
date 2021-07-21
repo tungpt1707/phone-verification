@@ -17,8 +17,10 @@ function InputField(props: any) {
     const { name, value, onChange, onBlur } = field
     const { errors, touched } = form
     
-    const showErrors = errors[name] && touched[name]
+    const showErrors = errors[name] && touched[name]    
+    
     const helperText = errors[name]
+    
     
     return (
         <div>
@@ -35,7 +37,7 @@ function InputField(props: any) {
                 onChange={onChange}
                 onBlur={onBlur}               
                 error= {showErrors}
-                helperText={helperText}
+                helperText={helperText}                
             />
         </div>
     )
