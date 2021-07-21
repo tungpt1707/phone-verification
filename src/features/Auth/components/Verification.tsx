@@ -31,9 +31,7 @@ function Verification(props: any) {
 
 
     const handleVerifyCode = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
-        let value = event.target.value;
-        console.log(value, index);
-
+        let value = event.target.value;        
         setOtp([...otp.map((d, ind) => (ind === index) ? value : d)])
     }
     props.otpchild(otp.join(''))
